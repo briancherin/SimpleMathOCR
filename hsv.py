@@ -3,8 +3,8 @@ import numpy as np
 import cv2
 
 #Range of color values (in HSV pixel values)
-lower = np.array([0, 100, 20], dtype = "uint8")
-upper = np.array([39, 35, 255], dtype = "uint8")
+#lower = np.array([0, 100, 20], dtype = "uint8")
+#upper = np.array([39, 35, 255], dtype = "uint8")
 
 # camera = cv2.VideoCapture(4)
 
@@ -20,7 +20,7 @@ cv2.createTrackbar('h', 'res', 0, 179, nothing)
 cv2.createTrackbar('s', 'res', 0, 255, nothing)
 cv2.createTrackbar('v', 'res', 0, 255, nothing)
 
-im1 = cv2.imread("eoyp/line1.jpg")
+im1 = cv2.imread("line1.jpg")
 
  
 while True:
@@ -34,7 +34,7 @@ while True:
 	s = cv2.getTrackbarPos('s', 'res')
 	v = cv2.getTrackbarPos('v', 'res')
 	
-	lower_color = np.array([11, 20, 0])
+	lower_color = np.array([h, s, v])
 	upper_white = np.array([179, 255, 255])
 	
 	mask = cv2.inRange(converted, lower_color, upper_white)
