@@ -2,6 +2,8 @@
 Task: Identify basic characters/digits and mathematical symbols from an image and convert them to LaTeX.
 
 # What are these files?!
+graphlib.py - support library for common graphing / image processing functions - adaptive threshold, get contours/approximation, pyplot scatter
+
 hsv.py - playing with color space and threshold manipulation. 
 
 nobg.py - initial attempt at background isolation, but it doesn't work so don't look at it
