@@ -1,5 +1,6 @@
 import cv2
 from matplotlib import pyplot as plt
+import numpy as np
 
 """Translate the graph such that the center (mean) of the graph is at (0,0)
 		@param xcoords, ycoords: numpy arrays of coordinates
@@ -7,9 +8,16 @@ from matplotlib import pyplot as plt
 """
 def originToCenter(xcoords, ycoords):
 	#determine center coordinates
-	xcenter = np.sum(xcoords.copy()) / len(xcoords)
-	ycenter = np.sum(ycoords.copy()) / len(ycoords)
-	print("Center: (" + str(xcenter) + ", " + ycenter + ")")
+	xcenter = np.sum(xcoords) / len(xcoords)
+	ycenter = np.sum(ycoords) / len(ycoords)
+	newx = []
+	newy = []
+	#shift the graph so the center is at the origin
+	for x in xcoords:
+		newx.append(x-xcenter)
+	for y in ycoords:
+		newy.append(y-ycenter)
+	return (np.array(newx), np.array(newy))
 	
 blocksize = 99
 constant = 10
