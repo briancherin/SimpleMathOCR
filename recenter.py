@@ -12,4 +12,5 @@ contours = gl.getContours(im1)
 contour1 = gl.getContourApproximation(contours, index)
 
 x, y = gl.splitContoursCoords(contour1)
+x, y = gl.originToCenter(x, y)
 gl.graph(x, y)
