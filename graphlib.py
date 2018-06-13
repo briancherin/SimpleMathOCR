@@ -8,6 +8,10 @@ import imutils
 		@param xcoords, ycoords: numpy arrays of coordinates
 		@return tuple (xcoords, ycoords)
 """
+
+hd = None
+
+
 def originToCenter(xcoords, ycoords):
 	#determine center coordinates
 	xcenter = np.sum(xcoords) / len(xcoords)
@@ -20,6 +24,12 @@ def originToCenter(xcoords, ycoords):
 	for y in ycoords:
 		newy.append(y-ycenter)
 	return (np.array(newx), np.array(newy))
+
+def getContourCenter(contour):
+	x, y = splitContoursCoords(contour)
+	xcenter = np.sum(x) / len(x)
+	ycenter = np.sum(y) / len(y)
+	return (xcenter, ycenter)
 	
 blocksize = 99
 constant = 10
@@ -97,7 +107,7 @@ def cropAroundContour(img, contour):
 	xmax = tuple(contour[contour[:, :, 0].argmax()][0])[0]
 	ymin = tuple(contour[contour[:, :, 1].argmin()][0])[1]
 	ymax = tuple(contour[contour[:, :, 1].argmax()][0])[1]
-	print(str(xmin) + " " + str(xmax) + " " + str(ymin)+ " " + str(ymax))
+	#print(str(xmin) + " " + str(xmax) + " " + str(ymin)+ " " + str(ymax))
 	return cropImage(img, xmin, ymin, xmax, ymax)
 
 def equalizeScale(im1, im2):
@@ -145,6 +155,39 @@ def getBestContours(im1, im2):
 
 def blurImage(img, radius=21):
 	return cv2.GaussianBlur(img, (radius, radius), 0)
+
+def setupHDComp():
+	global hd
+	hd = cv2.createHausdorffDistanceExtractor()
+
+"""Get the Hausdorff Distance between the two contours"""
+def getHDDistance(contour1, contour2):
+	d1 = hd.computeDistance(contour1, contour2)
+	return d1
+
+"""Vertically shift the contour by [shift], by modifying each point in the contour (go up by [shift] amount)"""
+def contourVerticalShift(contour, shift):
+	cntCopy = list(contour) #make a copy of the contour (TODO: THIS DOESN'T WORK. THE ORIGINAL IS MODIFIED)
+	for point in cntCopy:
+		point[0][1] += shift * -1
+	return np.array(cntCopy)
+
+"""Horizontally shift the contour (go right by [shift] amount)"""
+def contourHorizontalShift(contour, shift):
+	cntCopy = list(contour)
+	for point in cntCopy:
+		point[0][0] += shift
+	return np.array(cntCopy)
+
+"""Realign one of the contours such that its center (mean of all points) is at the same point as that of the other"""
+def alignContoursCenter(contour1, contour2):
+	xcenter1, ycenter1 = getContourCenter(contour1)
+	xcenter2, ycenter2 = getContourCenter(contour2)
+
+	contour1 = contourVerticalShift(contour1, ycenter2-ycenter1) #vertical shift by difference in center y-vals
+	contour1 = contourHorizontalShift(contour1, xcenter2-xcenter1) #horizontal shift by diff in center x-vals
+	
+	return (contour1, contour2)
 	
 def graph(x, y):
 	plt.scatter(x, y)
