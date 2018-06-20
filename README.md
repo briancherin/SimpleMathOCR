@@ -17,3 +17,8 @@ threshanim.py - animation of adaptive threshold, cycling through blocksize/const
 threshOtsu.py - Otsu threshold - not as good as adaptive for the sample image
 
 featurematch.py - Brute Force Matching (BTMatching). A basis for directly comoparing a given image to other possible standard images.
+
+
+hausdorff.py - demo of OpenCV's Hausdorff Distance Extractor to compare the contours of two imagtes
+
+symbtest2.py - the "final product". Programatically computed the Hausdorff distance between two contours to determine the closets character match.
